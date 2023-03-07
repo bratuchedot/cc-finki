@@ -1,5 +1,14 @@
 const form = document.querySelector("#upload-form");
 const responseDiv = document.querySelector("#response");
+const spinner = document.querySelector("#spinner");
+
+function showSpinner() {
+  spinner.style.display = "block";
+}
+
+function hideSpinner() {
+  spinner.style.display = "none";
+}
 
 form.addEventListener("submit", (event) => {
   event.preventDefault();
@@ -7,12 +16,14 @@ form.addEventListener("submit", (event) => {
   const numbersFile = numbersInput.files[0];
   const formData = new FormData();
   formData.append("numbers", numbersFile);
+  showSpinner(); // show the spinner
   fetch("/upload", {
     method: "POST",
     body: formData,
   })
     .then((response) => response.json())
     .then((data) => {
+      hideSpinner(); // hide the spinner
       // Display the result in a table
       responseDiv.innerHTML = `
         <table>
