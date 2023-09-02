@@ -8,19 +8,19 @@ const upload = multer({ dest: "uploads/" });
 app.use(express.static("public"));
 
 app.post("/upload", upload.single("numbers"), (req, res) => {
-  const startTime = process.hrtime(); // Start measuring the execution time
+  const executionStartTime = process.hrtime();
 
   // Read the uploaded file and split into an array of numbers
-  const readStartTime = process.hrtime(); // Start measuring the reading time of the file
+  const readingStartTime = process.hrtime();
   const numbers = fs
     .readFileSync(req.file.path, "utf-8")
     .trim()
     .split(" ")
     .map(Number);
-  const readEndTime = process.hrtime(); // Stop measuring the reading time of the file
+  const readingEndTime = process.hrtime();
 
   // Find the max number and its index
-  const calcStartTime = process.hrtime(); // Start measuring the processing time
+  const processingStartTime = process.hrtime();
   /**
    * const max = Math.max(...numbers);
    * const index = numbers.indexOf(max);
@@ -35,21 +35,22 @@ app.post("/upload", upload.single("numbers"), (req, res) => {
       index = i;
     }
   }
-  const calcEndTime = process.hrtime(); // Stop measuring the processing time
+  const processingEndTime = process.hrtime();
+
+  const executionEndTime = process.hrtime();
+
+  const readingTime =
+    (readingEndTime[0] - readingStartTime[0]) * 1000 +
+    (readingEndTime[1] - readingStartTime[1]) / 1e6;
+  const processingTime =
+    (processingEndTime[0] - processingStartTime[0]) * 1000 +
+    (processingEndTime[1] - processingStartTime[1]) / 1e6;
+  const executionTime =
+    (executionEndTime[0] - executionStartTime[0]) * 1000 +
+    (executionEndTime[1] - executionStartTime[1]) / 1e6;
 
   // Send the result as a JSON object
-  const endTime = process.hrtime(); // Stop measuring the execution time
-
-  const readTime =
-    (readEndTime[0] - readStartTime[0]) * 1000 +
-    (readEndTime[1] - readStartTime[1]) / 1e6;
-  const calcTime =
-    (calcEndTime[0] - calcStartTime[0]) * 1000 +
-    (calcEndTime[1] - calcStartTime[1]) / 1e6;
-  const totalTime =
-    (endTime[0] - startTime[0]) * 1000 + (endTime[1] - startTime[1]) / 1e6;
-
-  res.json({ max, index, readTime, calcTime, totalTime });
+  res.json({ max, index, readingTime, processingTime, executionTime });
 });
 
 const port = process.env.PORT || 3000;

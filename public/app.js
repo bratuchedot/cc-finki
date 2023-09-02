@@ -37,15 +37,15 @@ form.addEventListener("submit", (event) => {
           </tr>
           <tr>
             <th>Reading Time (ms)</th>
-            <td>${data.readTime.toFixed(2)}</td>
+            <td>${data.readingTime.toFixed(2)}</td>
           </tr>
           <tr>
             <th>Processing Time (ms)</th>
-            <td>${data.calcTime.toFixed(2)}</td>
+            <td>${data.processingTime.toFixed(2)}</td>
           </tr>
           <tr>
             <th>Total Execution Time (ms)</th>
-            <td>${data.totalTime.toFixed(2)}</td>
+            <td>${data.executionTime.toFixed(2)}</td>
           </tr>
         </table>
       `;
